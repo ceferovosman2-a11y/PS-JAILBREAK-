@@ -128,7 +128,6 @@ function renderMaterials() {
 }
 
 function selectCategory(category) {
-
   activeCategory = category;
   title.textContent = category;
   backButton.hidden = false;
