@@ -1,44 +1,39 @@
 
 const materials = [
   {
-    id: 1,
+    id: "default-1",
     category: "Обновления",
     name: "Системные обновления PS4",
     description: "Информация о системных обновлениях PlayStation 4.",
-    icon: "↻",
-    version: "Каталог версий"
+    icon: "↻"
   },
   {
-    id: 2,
+    id: "default-2",
     category: "Прошивки PS4",
     name: "Прошивки PlayStation 4",
     description: "Архив версий системной прошивки PS4.",
-    icon: "⚙",
-    version: "Каталог версий"
+    icon: "⚙"
   },
   {
-    id: 3,
+    id: "default-3",
     category: "Приложения",
     name: "Приложения для PS4",
     description: "Подборка приложений и полезных инструментов.",
-    icon: "▣",
-    version: "Каталог приложений"
+    icon: "▣"
   },
   {
-    id: 4,
+    id: "default-4",
     category: "Игры для PS4",
     name: "Игровая библиотека PS4",
     description: "Каталог игр с информацией о каждой игре.",
-    icon: "🎮",
-    version: "Каталог игр"
+    icon: "🎮"
   },
   {
-    id: 5,
+    id: "default-5",
     category: "Файлы",
     name: "Дополнительные файлы",
     description: "Полезные материалы и дополнительные файлы.",
-    icon: "▤",
-    version: "Каталог файлов"
+    icon: "▤"
   }
 ];
 
@@ -50,18 +45,50 @@ const title = document.getElementById("catalog-title");
 const empty = document.getElementById("empty");
 const backButton = document.getElementById("back-button");
 
+let databaseMaterials = [];
+
+async function loadMaterials() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("materials")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) throw error;
+
+    databaseMaterials = (data || []).map(item => ({
+      id: "db-" + item.id,
+      category: item.category,
+      name: item.title,
+      description: item.description || "",
+      icon: item.category === "Приложения" ? "▣" :
+            item.category === "Игры для PS4" ? "🎮" :
+            item.category === "Прошивки PS4" ? "⚙" : "▤",
+      download_url: item.download_url,
+      image_url: item.image_url
+    }));
+
+    renderMaterials();
+  } catch (error) {
+    console.error("Ошибка загрузки:", error);
+    empty.hidden = false;
+    empty.textContent = "Не удалось загрузить материалы. Проверь подключение Supabase.";
+  }
+}
+
 function renderMaterials() {
   const query = searchInput.value.trim().toLowerCase();
 
-  const filtered = materials.filter(item => {
+  const allMaterials = [...databaseMaterials, ...materials];
+
+  const filtered = allMaterials.filter(item => {
     const categoryMatch =
       activeCategory === "Все" ||
       item.category === activeCategory;
 
     const searchMatch =
-      (item.name + " " + item.description + " " +
-       item.category + " " + item.version)
-      .toLowerCase().includes(query);
+      (item.name + " " + item.description + " " + item.category)
+        .toLowerCase().includes(query);
 
     return categoryMatch && searchMatch;
   });
@@ -87,7 +114,7 @@ function renderMaterials() {
     description.textContent = item.description;
 
     const button = document.createElement("button");
-    button.textContent = "Открыть раздел →";
+    button.textContent = "Открыть →";
     button.addEventListener("click", () => openMaterial(item.id));
 
     card.append(icon, type, name, description, button);
@@ -95,6 +122,9 @@ function renderMaterials() {
   });
 
   empty.hidden = filtered.length !== 0;
+  if (filtered.length === 0) {
+    empty.textContent = "В этом разделе пока нет материалов.";
+  }
 }
 
 function selectCategory(category) {
@@ -104,6 +134,7 @@ function selectCategory(category) {
   searchInput.value = "";
 
   renderMaterials();
+
   document.getElementById("catalog").scrollIntoView({
     behavior: "smooth"
   });
@@ -118,45 +149,44 @@ function resetCategory() {
 }
 
 function showHome() {
-  document.getElementById("home").scrollIntoView({
-    behavior: "smooth"
-  });
+  document.getElementById("home").scrollIntoView({ behavior: "smooth" });
 }
 
 function showCatalog() {
-  document.getElementById("catalog").scrollIntoView({
-    behavior: "smooth"
-  });
+  document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
 }
 
 function showAbout() {
-  document.getElementById("about").scrollIntoView({
-    behavior: "smooth"
-  });
+  document.getElementById("about").scrollIntoView({ behavior: "smooth" });
 }
 
 function openMaterial(id) {
-  const item = materials.find(material => material.id === id);
+  const item = [...databaseMaterials, ...materials]
+    .find(material => material.id === id);
 
   if (!item) return;
 
   document.getElementById("modal-category").textContent =
     item.category.toUpperCase();
 
-  document.getElementById("modal-title").textContent =
-    item.name;
-
+  document.getElementById("modal-title").textContent = item.name;
   document.getElementById("modal-description").textContent =
-    item.description + " Здесь будет список доступных версий и подробная информация.";
+    item.description;
 
   const downloadArea = document.getElementById("modal-download");
+  downloadArea.innerHTML = "";
 
-  downloadArea.innerHTML = `
-    <div class="modal-note">
-      Материалы этого раздела ещё не добавлены.
-      Ссылки на загрузки появятся после проверки файлов.
-    </div>
-  `;
+  if (item.download_url) {
+    const link = document.createElement("a");
+    link.href = item.download_url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Скачать / Открыть материал →";
+    link.className = "primary";
+    downloadArea.appendChild(link);
+  } else {
+    downloadArea.textContent = "Ссылки на материалы пока нет.";
+  }
 
   document.getElementById("modal").style.display = "flex";
 }
@@ -166,12 +196,10 @@ function hideModal() {
 }
 
 function closeModal(event) {
-  if (event.target.id === "modal") {
-    hideModal();
-  }
+  if (event.target.id === "modal") hideModal();
 }
 
 searchInput.addEventListener("input", renderMaterials);
 
 renderMaterials();
-    
+loadMaterials();
