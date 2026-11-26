@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090c09">
+  <title>CONSOLE BASE — PS4 Archive</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <a class="logo" href="#" onclick="showHome();return false">
+    CONSOLE <span>BASE</span>
+  </a>
+  <nav>
+    <button onclick="showHome()">Главная</button>
+    <button onclick="showCatalog()">Каталог</button>
+    <button onclick="showAbout()">О проекте</button>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="eyebrow">PLAYSTATION 4 ARCHIVE</div>
+    <h1>ТВОЯ КОНСОЛЬ.<br><span>ТВОЯ БИБЛИОТЕКА.</span></h1>
+    <p>Обновления, прошивки, приложения, игры и полезные материалы для PlayStation 4 в одном месте.</p>
+    <button class="primary" onclick="showCatalog()">ОТКРЫТЬ КАТАЛОГ <span>→</span></button>
+  </div>
+  <div class="hero-mark">PS4</div>
+</section>
+
+<main>
+  <section id="catalog" class="catalog-section">
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">LIBRARY / 01</div>
+        <h2>Каталог</h2>
+        <p>Выбери интересующий раздел</p>
+      </div>
+      <div class="catalog-count">5 РАЗДЕЛОВ</div>
+    </div>
+
+    <div class="categories">
+      <button class="category" onclick="selectCategory('Обновления')">
+        <span class="category-icon">↻</span>
+        <strong>Обновления</strong>
+        <small>Системные обновления</small>
+      </button>
+      <button class="category" onclick="selectCategory('Прошивки PS4')">
+        <span class="category-icon">⚙</span>
+        <strong>Прошивки PS4</strong>
+        <small>Версии прошивок</small>
+      </button>
+      <button class="category" onclick="selectCategory('Приложения')">
+        <span class="category-icon">▣</span>
+        <strong>Приложения</strong>
+        <small>Полезные приложения</small>
+      </button>
+      <button class="category" onclick="selectCategory('Игры для PS4')">
+        <span class="category-icon">🎮</span>
+        <strong>Игры для PS4</strong>
+        <small>Игровая библиотека</small>
+      </button>
+      <button class="category" onclick="selectCategory('Файлы')">
+        <span class="category-icon">▤</span>
+        <strong>Файлы</strong>
+        <small>Дополнительные материалы</small>
+      </button>
+    </div>
+
+    <div class="catalog-heading">
+      <div>
+        <div class="eyebrow">EXPLORE</div>
+        <h2 id="catalog-title">Все материалы</h2>
+      </div>
+      <button class="back-button" id="back-button" onclick="resetCategory()" hidden>← Все разделы</button>
+    </div>
+
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="⌕  Поиск по каталогу..."
+      autocomplete="off"
+    >
+
+    <div id="results" class="results"></div>
+    <p id="empty" class="empty" hidden>Ничего не найдено. Попробуй другой запрос.</p>
+  </section>
+
+  <section class="about-section" id="about">
+    <div class="eyebrow">ABOUT PROJECT / 02</div>
+    <h2>О проекте</h2>
+    <p>
+      CONSOLE BASE — независимый каталог материалов для PlayStation 4.
+      Здесь собраны разделы обновлений, прошивок, приложений, игр
+      и дополнительных файлов.
+    </p>
+    <p>
+      Каталог будет постепенно пополняться проверенной информацией
+      и ссылками на материалы, которые разрешено распространять.
+    </p>
+  </section>
+</main>
+
+<footer>
+  <div class="logo">CONSOLE <span>BASE</span></div>
+  <p>Независимый информационный проект о PlayStation 4.</p>
+  <small>© 2026 CONSOLE BASE</small>
+</footer>
+
+<div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="hideModal()">×</button>
+    <div class="eyebrow" id="modal-category"></div>
+    <h2 id="modal-title"></h2>
+    <p id="modal-description"></p>
+    <div id="modal-download"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+  </html>
+  
