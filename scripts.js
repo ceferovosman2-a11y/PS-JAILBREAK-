@@ -128,6 +128,7 @@ function renderMaterials() {
 }
 
 function selectCategory(category) {
+  alert("Кнопка работает! Раздел: " + category);
   activeCategory = category;
   title.textContent = category;
   backButton.hidden = false;
