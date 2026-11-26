@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PS-JAILBREAK — Admin</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 25px 15px;
+      background: #10120f;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    main {
+      max-width: 550px;
+      margin: 35px auto;
+      padding: 25px;
+      background: #1c2019;
+      border: 1px solid #39402d;
+      border-radius: 15px;
+    }
+    h1 { color: #d6fa45; }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0 15px;
+      border-radius: 8px;
+      border: 1px solid #505747;
+      background: #11140f;
+      color: white;
+      font-size: 15px;
+    }
+    button {
+      background: #d6fa45;
+      color: #111;
+      border: 0;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #panel { display: none; }
+    #status { color: #d6fa45; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>PS-JAILBREAK</h1>
+  <h2>Панель администратора</h2>
+
+  <section id="login">
+    <h3>Вход</h3>
+    <input id="email" type="email" placeholder="Электронная почта">
+    <input id="password" type="password" placeholder="Пароль">
+    <button id="loginBtn">Войти</button>
+  </section>
+
+  <section id="panel">
+    <h3>Добавить материал</h3>
+    <input id="title" placeholder="Название игры или приложения">
+
+    <select id="category">
+      <option value="Игры для PS4">Игры для PS4</option>
+      <option value="Приложения">Приложения</option>
+      <option value="Прошивки PS4">Прошивки PS4</option>
+      <option value="Обновления">Обновления</option>
+      <option value="Файлы">Файлы</option>
+    </select>
+
+    <textarea id="description" placeholder="Описание"></textarea>
+    <input id="image" type="url" placeholder="Ссылка на обложку">
+    <input id="download" type="url" placeholder="Ссылка на скачивание">
+
+    <button id="addBtn">Добавить в каталог</button>
+    <button id="logoutBtn">Выйти</button>
+  </section>
+
+  <p id="status"></p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
