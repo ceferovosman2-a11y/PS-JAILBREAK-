@@ -1,5 +1,5 @@
 
-const materials = [
+const materials = [];
   {
     id: "default-1",
     category: "Обновления",
