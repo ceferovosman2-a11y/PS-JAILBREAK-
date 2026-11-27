@@ -1,42 +1,7 @@
 
 const materials = [];
-  {
-    id: "default-1",
-    category: "Обновления",
-    name: "Системные обновления PS4",
-    description: "Информация о системных обновлениях PlayStation 4.",
-    icon: "↻"
-  },
-  {
-    id: "default-2",
-    category: "Прошивки PS4",
-    name: "Прошивки PlayStation 4",
-    description: "Архив версий системной прошивки PS4.",
-    icon: "⚙"
-  },
-  {
-    id: "default-3",
-    category: "Приложения",
-    name: "Приложения для PS4",
-    description: "Подборка приложений и полезных инструментов.",
-    icon: "▣"
-  },
-  {
-    id: "default-4",
-    category: "Игры для PS4",
-    name: "Игровая библиотека PS4",
-    description: "Каталог игр с информацией о каждой игре.",
-    icon: "🎮"
-  },
-  {
-    id: "default-5",
-    category: "Файлы",
-    name: "Дополнительные файлы",
-    description: "Полезные материалы и дополнительные файлы.",
-    icon: "▤"
-  }
-];
 
+let databaseMaterials = [];
 let activeCategory = "Все";
 
 const results = document.getElementById("results");
@@ -44,8 +9,6 @@ const searchInput = document.getElementById("search");
 const title = document.getElementById("catalog-title");
 const empty = document.getElementById("empty");
 const backButton = document.getElementById("back-button");
-
-let databaseMaterials = [];
 
 async function loadMaterials() {
   try {
@@ -57,7 +20,7 @@ async function loadMaterials() {
     if (error) throw error;
 
     databaseMaterials = (data || []).map(item => ({
-      id: "db-" + item.id,
+      id: item.id,
       category: item.category,
       name: item.title,
       description: item.description || "",
@@ -70,9 +33,9 @@ async function loadMaterials() {
 
     renderMaterials();
   } catch (error) {
-    console.error("Ошибка загрузки:", error);
+    console.error("Supabase error:", error);
     empty.hidden = false;
-    empty.textContent = "Не удалось загрузить материалы. Проверь подключение Supabase.";
+    empty.textContent = "Ошибка загрузки материалов. Проверь подключение.";
   }
 }
 
@@ -88,7 +51,7 @@ function renderMaterials() {
 
     const searchMatch =
       (item.name + " " + item.description + " " + item.category)
-        .toLowerCase().includes(query);
+      .toLowerCase().includes(query);
 
     return categoryMatch && searchMatch;
   });
@@ -122,6 +85,7 @@ function renderMaterials() {
   });
 
   empty.hidden = filtered.length !== 0;
+
   if (filtered.length === 0) {
     empty.textContent = "В этом разделе пока нет материалов.";
   }
@@ -149,20 +113,25 @@ function resetCategory() {
 }
 
 function showHome() {
-  document.getElementById("home").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("home").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 function showCatalog() {
-  document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("catalog").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 function showAbout() {
-  document.getElementById("about").scrollIntoView({ behavior: "smooth" });
+  document.getElementById("about").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 function openMaterial(id) {
-  const item = [...databaseMaterials, ...materials]
-    .find(material => material.id === id);
+  const item = databaseMaterials.find(material => material.id === id);
 
   if (!item) return;
 
@@ -181,11 +150,10 @@ function openMaterial(id) {
     link.href = item.download_url;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.textContent = "Скачать / Открыть материал →";
-    link.className = "primary";
+    link.textContent = "Скачать материал →";
     downloadArea.appendChild(link);
   } else {
-    downloadArea.textContent = "Ссылки на материалы пока нет.";
+    downloadArea.textContent = "Ссылка пока не добавлена.";
   }
 
   document.getElementById("modal").style.display = "flex";
@@ -196,10 +164,14 @@ function hideModal() {
 }
 
 function closeModal(event) {
-  if (event.target.id === "modal") hideModal();
+  if (event.target.id === "modal") {
+    hideModal();
+  }
 }
 
 searchInput.addEventListener("input", renderMaterials);
 
 renderMaterials();
 loadMaterials();
+
+  
